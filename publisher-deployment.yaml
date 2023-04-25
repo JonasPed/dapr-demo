@@ -1,0 +1,42 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: bash
+  labels:
+    app: bash
+spec:
+  selector:
+    app: bash
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080
+  type: LoadBalancer
+
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bash
+  labels:
+    app: bash
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: bash
+  template:
+    metadata:
+      labels:
+        app: bash
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "bash"
+          #        dapr.io/app-port: "8080"
+    spec:
+      containers:
+      - name: bash
+        image: jonaspkit/loop:latest
+        ports:
+        - containerPort: 8080
+        imagePullPolicy: Always

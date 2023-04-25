@@ -1,0 +1,26 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: python-subscriber-1
+  labels:
+    app: python-subscriber-1
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: python-subscriber-1
+  template:
+    metadata:
+      labels:
+        app: python-subscriber-1
+      annotations:
+        dapr.io/enabled: "true"
+        dapr.io/app-id: "python-1"
+        dapr.io/app-port: "5001"
+    spec:
+      containers:
+      - name: python-subscriber
+        image: jonaspkit/dapr-python:latest
+        ports:
+        - containerPort: 5001
+        imagePullPolicy: Always
